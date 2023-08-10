@@ -2,11 +2,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Form, Label, Input, Button } from './ContactForm.styled';
 import { useState } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
-import { addContact } from 'redux/ContactSlice/ContactSlice';
+import { addContact } from 'redux/ContactSlice/contactSlice';
+import { ContactSelector } from 'redux/ContactSlice/selectors';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contact.contact);
+  const contacts = useSelector(ContactSelector);
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -14,12 +15,6 @@ export const ContactForm = () => {
   const contactId = nanoid();
 
   const handlerAddContacts = () => {
-    const contact = {
-      id: contactId,
-      name: name,
-      number: number,
-    };
-
     if (name === '' || number === '') {
       alert('Enter data');
       return;
@@ -32,6 +27,12 @@ export const ContactForm = () => {
     ) {
       return alert(`${name} is already in contacts`);
     }
+
+    const contact = {
+      id: contactId,
+      name: name,
+      number: number,
+    };
     dispatch(addContact(contact));
     resetForm();
   };
